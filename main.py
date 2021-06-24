@@ -26,9 +26,9 @@ def saveToMp4(images, framerate, filename, sound=None):
     process = None
     if sound is not None:
         audio = ffmpeg.input(sound)
-        process = ffmpeg.input("pipe:", r=framerate, f="jpeg_pipe").output(audio, filename + ".mp4", vcodec="libx264", acodec="mp3").overwrite_output().run_async(pipe_stdin=True)
+        process = ffmpeg.input("pipe:", r=framerate, f="jpeg_pipe").filter("pad", "ceil(iw/2)*2", "ceil(ih/2)*2").output(audio, filename + ".mp4", vcodec="libx265", acodec="mp3").overwrite_output().run_async(pipe_stdin=True)
     else:
-        process = ffmpeg.input("pipe:", r=framerate, f="jpeg_pipe").output(filename + ".mp4", vcodec="libx264").overwrite_output().run_async(pipe_stdin=True)
+        process = ffmpeg.input("pipe:", r=framerate, f="jpeg_pipe").filter("pad", "ceil(iw/2)*2","ceil(ih/2)*2").output(filename + ".mp4", vcodec="libx265").overwrite_output().run_async(pipe_stdin=True)
 
     for image in images:
         process.stdin.write(image)
